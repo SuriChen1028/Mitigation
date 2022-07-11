@@ -13,3 +13,10 @@ $\xi_a$
 $\xi_g$
 and
 $\xi_p$.
+
+- `./notes/` includes notes about the model we are solving;
+- [`./figures`](./figures/) includes our previous plots with 20 damages and 2 technology jump, and also recents experiments on different combination of 
+$\psi_0$
+and
+$\psi_1$
+.
