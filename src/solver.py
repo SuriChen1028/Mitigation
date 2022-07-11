@@ -161,6 +161,7 @@ def _FOC_update(v0, steps= (), states = (), args=(), controls=(), fraction=0.5):
         i_new = - (mc / dK - 1) / kappa
         i_new[i_new <= 1e-16] = 1e-16
         x_new = (mc / (dL * psi_0 * psi_1) * np.exp(psi_1 * (L_mat - K_mat)) )**(1 / (psi_1 - 1))
+        x_new[x_new >= 1 - 1e-16] = 1 - 1e-16
 
     ii = i_new * fraction + i_star * (1 - fraction)
     ee = e_new * fraction + e_star * (1 - fraction)

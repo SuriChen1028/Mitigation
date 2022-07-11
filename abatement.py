@@ -87,7 +87,7 @@ vartheta_bar_second = 0.
 # Grids Specification
 # Coarse Grids
 K_min = 4.00
-K_max = 9.00
+K_max = 10.00
 hK    = 0.20
 K     = np.arange(K_min, K_max + hK, hK)
 nK    = len(K)
