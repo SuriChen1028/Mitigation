@@ -5,7 +5,7 @@ This folder stores files used to compute post damage jump results on mercury clu
 - `post_damage.py` is the python file
 The flags are as follows:
 ```
-usage: post_damage_one_tech.py [-h] [--xi_a XI_A] [--xi_g XI_G] [--id ID] [--psi_0 PSI_0] [--psi_1 PSI_1]
+usage: post_damage.py [-h] [--xi_a XI_A] [--xi_g XI_G] [--id ID] [--psi_0 PSI_0] [--psi_1 PSI_1]
 
 xi_r values
 

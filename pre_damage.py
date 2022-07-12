@@ -185,8 +185,6 @@ with open(DataDir + "model_tech2_post_damage", "wb") as f:
 model_tech2_post_damage = pickle.load(open(DataDir + "model_tech2_post_damage", "rb"))
 print("Compiled.")
 
-# model_tech3_post_damage = pickle.load(open("./bin_data/attemp_newpsi0_xi_a_1000.0_xi_g_1000.0_psi_0_0.006_psi_1_0.5_model_tech3_post_damage", "rb"))
-# model_tech2_post_damage = pickle.load(open("./bin_data/attemp_newpsi0_xi_a_1000.0_xi_g_1000.0_psi_0_0.006_psi_1_0.5_model_tech1_post_damage", "rb"))
 # Post damage, tech I
 # print("-------------------------------------------")
 # print("------------Post damage, Tech I------------")
@@ -253,21 +251,20 @@ pi_c_o = np.ones(len(theta_ell)) / len(theta_ell)
 pi_c_o = np.array([temp * np.ones((nK, nY_short)) for temp in pi_c_o])
 theta_ell = np.array([temp * np.ones((nK, nY_short)) for temp in theta_ell])
 
-#############################
+################################
 ####Start of Compute############
-####################
-# model_tech3_pre_damage = hjb_pre_damage_post_tech(
-        # K, Y_short, 
-        # model_args=(delta, alpha, kappa, mu_k, sigma_k, theta_ell, pi_c_o, sigma_y, xi_a, xi_b, xi_p, pi_d_o, v_i, gamma_1, gamma_2, theta, lambda_bar_second, vartheta_bar_second, y_bar_lower),
-        # v0=np.mean(v_i, axis=0), epsilon=0.01, fraction=0.1,
-        # tol=1e-8, max_iter=20000, print_iteration=True
-        # )
+################################
+model_tech3_pre_damage = hjb_pre_damage_post_tech(
+        K, Y_short, 
+        model_args=(delta, alpha, kappa, mu_k, sigma_k, theta_ell, pi_c_o, sigma_y, xi_a, xi_b, xi_p, pi_d_o, v_i, gamma_1, gamma_2, theta, lambda_bar_second, vartheta_bar_second, y_bar_lower),
+        v0=np.mean(v_i, axis=0), epsilon=0.01, fraction=0.1,
+        tol=1e-8, max_iter=20000, print_iteration=True
+        )
 
-# with open(DataDir + "model_tech3_pre_damage", "wb") as f:
-    # pickle.dump(model_tech3_pre_damage, f)
+with open(DataDir + "model_tech3_pre_damage", "wb") as f:
+    pickle.dump(model_tech3_pre_damage, f)
 
 model_tech3_pre_damage = pickle.load(open(DataDir + "model_tech3_pre_damage", "rb"))
-# model_tech3_pre_damage = pickle.load(open("./bin_data/attemp_newpsi0_xi_a_1000.0_xi_g_1000.0_psi_0_0.006_psi_1_0.5_model_tech3_pre_damage", "rb"))
 ######################################
 ##########End of Compute##############
 ######################################
@@ -302,22 +299,21 @@ model_args =(delta, alpha, theta, vartheta_bar, lambda_bar, mu_k, kappa, sigma_k
 ######### Start of Compute###############
 #########################################
 
-Guess = pickle.load(open("./res_data/6damage/psi_0_{:.3f}_psi_1_{:.3f}/xi_a_1000.0_xi_g_1000.0/model_tech2_pre_damage".format(psi_0, psi_1), "rb"))
-# Guess = pickle.load(open("./bin_data/attemp_newpsi0_xi_a_1000.0_xi_g_1000.0_psi_0_0.006_psi_1_0.5_model_tech1_pre_damage", "rb"))
-# Guess = None
+# Guess = pickle.load(open("./res_data/6damage/psi_0_{:.3f}_psi_1_{:.3f}/xi_a_1000.0_xi_g_1000.0/model_tech2_pre_damage".format(psi_0, psi_1), "rb"))
+Guess = None
 model_tech2_pre_damage = hjb_pre_tech(
         state_grid=(K, Y_short, L), 
         model_args=model_args, V_post_damage=v_i, 
-        tol=1e-8, epsilon=0.005, fraction=0.005, max_iter=10000,
+        tol=1e-8, epsilon=0.01, fraction=0.01, max_iter=20000,
         v0=np.mean(v_i, axis=0),
         smart_guess=Guess,
         )
 
-# with open(DataDir + "model_tech2_pre_damage", "wb") as f:
-    # pickle.dump(model_tech2_pre_damage, f)
-
-with open("test_model_tech2_pre_damage", "wb") as f:
+with open(DataDir + "model_tech2_pre_damage", "wb") as f:
     pickle.dump(model_tech2_pre_damage, f)
+
+# with open("test_model_tech2_pre_damage", "wb") as f:
+    # pickle.dump(model_tech2_pre_damage, f)
 
 # model_tech2_pre_damage = pickle.load(open(DataDir + "model_tech2_pre_damage", "rb"))
 ############################################
