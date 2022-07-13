@@ -94,18 +94,18 @@ vartheta_bar_second = 0.
 # Grids Specification
 # Coarse Grids
 K_min = 4.00
-K_max = 9.50
-hK    = 0.10
+K_max = 9.00
+hK    = 0.20
 K     = np.arange(K_min, K_max + hK, hK)
 nK    = len(K)
 Y_min = 0.
-Y_max = 5.
+Y_max = 4.
 hY    = 0.10 # make sure it is float instead of int
 Y     = np.arange(Y_min, Y_max + hY, hY)
 nY    = len(Y)
 L_min = - 5.5
 L_max = - 0.
-hL    = 0.1
+hL    = 0.20
 L     = np.arange(L_min, L_max,  hL)
 nL    = len(L)
 
@@ -174,8 +174,8 @@ print("-------------------------------------------")
 # with open(DataDir + "model_tech3_post_damage_gamma_{:.4f}".format(gamma_3_i), "wb") as f:
     # pickle.dump(model_tech3_post_damage, f)
 
-# model_tech3_post_damage = pickle.load(open(DataDir + "model_tech3_post_damage_gamma_{:.4f}".format(gamma_3_i), "rb"))
-model_tech3_post_damage = pickle.load(open("./data_dense/xi_a_1000.0_xi_g_1000.0/model_tech3_post_damage_gamma_0.0000", "rb"))
+model_tech3_post_damage = pickle.load(open(DataDir + "model_tech3_post_damage_gamma_{:.4f}".format(gamma_3_i), "rb"))
+# model_tech3_post_damage = pickle.load(open("./data_dense/xi_a_1000.0_xi_g_1000.0/model_tech3_post_damage_gamma_0.0000", "rb"))
 
 # Post damage, tech II
 pi_c = np.array([temp * np.ones(K_mat.shape) for temp in pi_c_o])
@@ -186,23 +186,36 @@ print("------------Post damage, Tech II-----------")
 print("-------------------------------------------")
 V_post_3D = np.zeros_like(K_mat)
 for j in range(nL):
-    V_post_3D[:, :, j] = model_tech3_post_damage["v"]
+    V_post_3D[:, :, j] = model_tech3_post_damage["v"][:-3, :]
 V_post_tech2 = V_post_3D
 
-# Guess = pickle.load(open("./res_data/6damage/psi_0_{:.3f}_psi_1_{:.3f}/xi_a_{}_xi_g_{}/model_tech2_post_damage_gamma_{:.4f}".format(psi_0, psi_1, xi_a, xi_g, gamma_3_i), "rb"))
-Guess = pickle.load(open("data_dense/xi_a_1000.0_xi_g_1000.0/model_tech2_post_damage_gamma_0.0000", "rb"))
+Guess = pickle.load(open("./res_data/6damage/psi_0_{:.3f}_psi_1_{:.3f}/xi_a_{}_xi_g_{}/model_tech2_post_damage_gamma_{:.4f}".format(psi_0, psi_1, xi_a, xi_g, gamma_3_i), "rb"))
+
+v_test = Guess["v0"][:-3, :, :]
+i_test = Guess["i_star"][:-3, :, :]
+e_test = Guess["e_star"][:-3, :, :]
+x_test = Guess["x_star"][:-3, :, :]
+test = {
+        "v0" : v_test,
+        "i_star" : i_test,
+        "e_star" : e_test,
+        "x_star" : x_test,
+        }
+
+# Guess = pickle.load(open("data_dense/xi_a_1000.0_xi_g_1000.0/model_tech2_post_damage_gamma_0.0000", "rb"))
+# Guess = None
 res = hjb_pre_tech(
         state_grid=(K, Y, L), 
         model_args=(delta, alpha, theta, vartheta_bar, lambda_bar, mu_k, kappa, sigma_k, theta_ell, pi_c_o, pi_c, sigma_y, zeta, psi_0, psi_1, sigma_g, V_post_tech2, gamma_1, gamma_2, gamma_3_i, y_bar, xi_a, xi_g, xi_p),
         V_post_damage=None,
-        tol=1e-7, epsilon=0.005, fraction=0.005, 
-        smart_guess=Guess, 
-        max_iter=20000
+        tol=1e-7, epsilon=0.02, fraction=0.02, 
+        smart_guess=test, 
+        max_iter=2000
         )
 
 
-# with open(DataDir + "model_tech2_post_damage_gamma_{:.4f}".format(gamma_3_i), "wb") as f:
-    # pickle.dump(res, f)
+with open(DataDir + "model_tech2_post_damage_gamma_{:.4f}".format(gamma_3_i), "wb") as f:
+    pickle.dump(res, f)
 
 # res_i = pickle.load(open(DataDir + "model_tech2_post_damage_gamma_{:.4f}".format(gamma_3_i), "rb"))
 
