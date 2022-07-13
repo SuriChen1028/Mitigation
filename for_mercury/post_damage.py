@@ -7,7 +7,7 @@ Solver for solving post damage HJBs, with different values of gamma_3
 #Required packages
 import os
 import sys
-sys.path.append('./src')
+sys.path.append('../src')
 import csv
 from supportfunctions import *
 from supportfunctions import finiteDiff_3D
@@ -76,7 +76,7 @@ y_bar = 2.
 y_bar_lower = 1.5
 
 
-theta_ell = pd.read_csv('./model144.csv', header=None).to_numpy()[:, 0]/1000.
+theta_ell = pd.read_csv('../data/model144.csv', header=None).to_numpy()[:, 0]/1000.
 pi_c_o    = np.ones_like(theta_ell)/len(theta_ell)
 sigma_y   = 1.2 * np.mean(theta_ell)
 beta_f    = np.mean(theta_ell)
@@ -94,13 +94,13 @@ vartheta_bar_second = 0.
 # Grids Specification
 # Coarse Grids
 K_min = 4.00
-K_max = 9.50
+K_max = 9.00
 hK    = 0.20
 K     = np.arange(K_min, K_max + hK, hK)
 nK    = len(K)
 Y_min = 0.
 Y_max = 4.
-hY    = 0.20 # make sure it is float instead of int
+hY    = 0.10 # make sure it is float instead of int
 Y     = np.arange(Y_min, Y_max + hY, hY)
 nY    = len(Y)
 L_min = - 5.5
@@ -157,22 +157,22 @@ print("-------------------------------------------")
 
 model_args = (delta, alpha, kappa, mu_k, sigma_k, theta_ell, pi_c_o, sigma_y, xi_a, xi_b, gamma_1, gamma_2, gamma_3_i, y_bar, theta, lambda_bar_second, vartheta_bar_second)
 
-# model_tech3_post_damage = hjb_post_damage_post_tech(
-        # K, Y, model_args, v0=None,
-       # epsilon=0.1, fraction=0.1,tol=1e-8, max_iter=8000, print_iteration=False)
+model_tech3_post_damage = hjb_post_damage_post_tech(
+        K, Y, model_args, v0=None,
+       epsilon=0.1, fraction=0.1,tol=1e-8, max_iter=8000, print_iteration=False)
 
-
-model_tech3_post_damage = pickle.load(open(DataDir + "model_tech3_post_damage_gamma_{:.4f}".format(gamma_3_i), "rb"))
-
-v_post = model_tech3_post_damage["v"]
-V_post_3D = np.zeros_like(K_mat)
-for j in range(nL):
-    V_post_3D[:,:,j] = v_post
-
-# with open(DataDir + "model_tech3_post_damage_gamma_{:.4f}".format(gamma_3_i), "wb") as f:
-   # pickle.dump(model_tech3_post_damage, f)
 
 # model_tech3_post_damage = pickle.load(open(DataDir + "model_tech3_post_damage_gamma_{:.4f}".format(gamma_3_i), "rb"))
+
+# v_post = model_tech3_post_damage["v"]
+# V_post_3D = np.zeros_like(K_mat)
+# for j in range(nL):
+    # V_post_3D[:,:,j] = v_post
+
+with open(DataDir + "model_tech3_post_damage_gamma_{:.4f}".format(gamma_3_i), "wb") as f:
+   pickle.dump(model_tech3_post_damage, f)
+
+model_tech3_post_damage = pickle.load(open(DataDir + "model_tech3_post_damage_gamma_{:.4f}".format(gamma_3_i), "rb"))
 
 
 # Post damage, tech II
@@ -182,19 +182,36 @@ theta_ell = np.array([temp * np.ones(K_mat.shape) for temp in theta_ell])
 print("-------------------------------------------")
 print("------------Post damage, Tech II-----------")
 print("-------------------------------------------")
+v_post = model_tech3_post_damage["v"]
+V_post_3D = np.zeros_like(K_mat)
+for j in range(nL):
+    V_post_3D[:,:,j] = v_post[:, :]
 V_post_tech2 = V_post_3D
 
-with open(DataDir + "model_tech2_post_damage_gamma_{:.4f}".format(gamma_3_i), "rb") as f:
-    Guess = pickle.load(f)
+# with open(DataDir + "model_tech2_post_damage_gamma_{:.4f}".format(gamma_3_i), "rb") as f:
+    # Guess = pickle.load(f)
 
-# Guess = None
+Guess = None
+
+# v_test = Guess["v0"][:-3, :, :]
+# i_test = Guess["i_star"][:-3, :, :]
+# e_test = Guess["e_star"][:-3, :, :]
+# x_test = Guess["x_star"][:-3, :, :]
+
+# TEST = {
+        # "v0": v_test,
+        # "i_star": i_test,
+        # "e_star": e_test,
+        # "x_star": x_test,
+        # }
+
 
 res = hjb_pre_tech(
         state_grid=(K, Y, L), 
         model_args=(delta, alpha, theta, vartheta_bar, lambda_bar, mu_k, kappa, sigma_k, theta_ell, pi_c_o, pi_c, sigma_y, zeta, psi_0, psi_1, sigma_g, V_post_tech2, gamma_1, gamma_2, gamma_3_i, y_bar, xi_a, xi_g, xi_p),
         V_post_damage=None,
         tol=1e-7, epsilon=0.01, fraction=0.01, 
-        smart_guess=Guess, 
+        smart_guess=TEST, 
         max_iter=20000,
         )
 
