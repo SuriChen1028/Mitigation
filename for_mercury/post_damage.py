@@ -162,12 +162,6 @@ model_tech3_post_damage = hjb_post_damage_post_tech(
        epsilon=0.1, fraction=0.1,tol=1e-8, max_iter=8000, print_iteration=False)
 
 
-# model_tech3_post_damage = pickle.load(open(DataDir + "model_tech3_post_damage_gamma_{:.4f}".format(gamma_3_i), "rb"))
-
-# v_post = model_tech3_post_damage["v"]
-# V_post_3D = np.zeros_like(K_mat)
-# for j in range(nL):
-    # V_post_3D[:,:,j] = v_post
 
 with open(DataDir + "model_tech3_post_damage_gamma_{:.4f}".format(gamma_3_i), "wb") as f:
    pickle.dump(model_tech3_post_damage, f)
@@ -193,48 +187,16 @@ V_post_tech2 = V_post_3D
 
 Guess = None
 
-# v_test = Guess["v0"][:-3, :, :]
-# i_test = Guess["i_star"][:-3, :, :]
-# e_test = Guess["e_star"][:-3, :, :]
-# x_test = Guess["x_star"][:-3, :, :]
-
-# TEST = {
-        # "v0": v_test,
-        # "i_star": i_test,
-        # "e_star": e_test,
-        # "x_star": x_test,
-        # }
-
 
 res = hjb_pre_tech(
         state_grid=(K, Y, L), 
         model_args=(delta, alpha, theta, vartheta_bar, lambda_bar, mu_k, kappa, sigma_k, theta_ell, pi_c_o, pi_c, sigma_y, zeta, psi_0, psi_1, sigma_g, V_post_tech2, gamma_1, gamma_2, gamma_3_i, y_bar, xi_a, xi_g, xi_p),
         V_post_damage=None,
         tol=1e-7, epsilon=0.01, fraction=0.01, 
-        smart_guess=TEST, 
+        smart_guess=Guess, 
         max_iter=20000,
         )
 
 
 with open(DataDir + "model_tech2_post_damage_gamma_{:.4f}".format(gamma_3_i), "wb") as f:
     pickle.dump(res, f)
-
-# res_i = pickle.load(open(DataDir + "model_tech2_post_damage_gamma_{:.4f}".format(gamma_3_i), "rb"))
-
-# # Post damage, tech I
-#print("-------------------------------------------")
-#print("------------Post damage, Tech I------------")
-#print("-------------------------------------------")
-#V_post_tech1 = res_i["v0"]
-
-#res = hjb_pre_tech(
-#        state_grid=(K, Y, L),
-#        model_args=(delta, alpha, theta, vartheta_bar, lambda_bar, mu_k, kappa, sigma_k, theta_ell, pi_c_o, pi_c, sigma_y, zeta, psi_0, psi_1, sigma_g, V_post_tech1, gamma_1, gamma_2, gamma_3_i, y_bar, xi_a, xi_g, xi_p),
-#        V_post_damage=None,
-#        tol=1e-7, epsilon=0.01, fraction=0.01, smart_guess=res_i,
-#        max_iter=20000,
-#        )
-
-
-#with open(DataDir + "model_tech1_post_damage_gamma_{:.4f}".format(gamma_3_i), "wb") as f:
-#    pickle.dump(res, f)
