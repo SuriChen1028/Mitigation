@@ -20,5 +20,6 @@ $\psi_0$
 and
 $\psi_1$
 .
+- [`./for_mercury/`](./mercury/) contains code that used on Mercury.
 - `Abatement.ipynb` contains code that load HJB solutions and simulate trajectories of emission, R&D investment and physical investment.
-
+- [`./src/`] contains source files that solve 2D and 3D HJBs, simulate trajectories.
