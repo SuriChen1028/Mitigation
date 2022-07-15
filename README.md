@@ -23,3 +23,32 @@ $\psi_1$
 - [`./for_mercury/`](./mercury/) contains code that used on Mercury.
 - `Abatement.ipynb` contains code that load HJB solutions and simulate trajectories of emission, R&D investment and physical investment.
 - [`./src/`] contains source files that solve 2D and 3D HJBs, simulate trajectories.
+- `Plota_compare_psi_0.ipynb` plots trajectories fixing value of
+$
+\psi_1
+$
+and compare the impact of
+$
+\psi_0
+$
+.
+- `Plots_compare_psi_1.ipynb` plots trajectories fixing value of 
+$
+\psi_0
+$ 
+and compare the impact of 
+$
+\psi_1
+$
+.
+- `./res_data_old_files`: data from April, 2022 are stored here.
+	- `./res_data_old_files/10damage`: parameter setting from April, 2022, with 10 values of 
+$
+\gamma_3
+$
+.
+	- `./res_data_old_files/20damage`: parameter setting from April, 2022, with 20 values of
+$
+\gamma_3
+$
+.
