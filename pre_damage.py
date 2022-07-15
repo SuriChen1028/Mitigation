@@ -99,7 +99,7 @@ vartheta_bar_second = 0.
 # Coarse Grids
 K_min = 4.00
 K_max = 9.00
-hK    = 0.20
+hK    = 0.10
 K     = np.arange(K_min, K_max + hK, hK)
 nK    = len(K)
 Y_min = 0.
@@ -228,7 +228,7 @@ print("---------Pre damage, Tech III--------------")
 print("-------------------------------------------")
 id_2 = np.abs(Y - y_bar).argmin()
 Y_min_short = 0.
-Y_max_short = 3.
+Y_max_short = 2.5
 Y_short     = np.arange(Y_min_short, Y_max_short + hY, hY)
 nY_short    = len(Y_short)
 # Pre damage, tech III
@@ -238,7 +238,7 @@ for i in range(len(gamma_3_list)):
     gamma_3_i = gamma_3_list[i]
     v_post_damage_i = np.zeros((nK, nY_short))
     for j in range(nY_short):
-        v_post_damage_i[:, j] = model_tech3_post_damage[i]["v"][:-3, id_2]
+        v_post_damage_i[:, j] = model_tech3_post_damage[i]["v"][:, id_2]
 
     v_i.append(v_post_damage_i)
 
@@ -288,7 +288,7 @@ for model in model_tech2_post_damage:
         v_post_damage_temp[:, j, :] = v_post_damage_i[:, id_2, :]
     v_i.append(v_post_damage_temp)
 v_i = np.array(v_i)
-v_post = model_tech3_pre_damage["v"][:-3, :nY_short]
+v_post = model_tech3_pre_damage["v"][:, :nY_short]
 v_tech3 = np.zeros((nK, nY_short, nL))
 for i in range(nL):
     v_tech3[:, :, i] = v_post
@@ -304,7 +304,7 @@ Guess = None
 model_tech2_pre_damage = hjb_pre_tech(
         state_grid=(K, Y_short, L), 
         model_args=model_args, V_post_damage=v_i, 
-        tol=1e-8, epsilon=0.005, fraction=0.005, max_iter=10000,
+        tol=1e-8, epsilon=0.005, fraction=0.005, max_iter=30000,
         v0=np.mean(v_i, axis=0),
         smart_guess=Guess,
         )
@@ -312,8 +312,6 @@ model_tech2_pre_damage = hjb_pre_tech(
 with open(DataDir + "model_tech2_pre_damage", "wb") as f:
     pickle.dump(model_tech2_pre_damage, f)
 
-# with open("test_model_tech2_pre_damage", "wb") as f:
-    # pickle.dump(model_tech2_pre_damage, f)
 
 # model_tech2_pre_damage = pickle.load(open(DataDir + "model_tech2_pre_damage", "rb"))
 ############################################
