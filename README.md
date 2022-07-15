@@ -20,3 +20,5 @@ $\psi_0$
 and
 $\psi_1$
 .
+- `Abatement.ipynb` contains code that load HJB solutions and simulate trajectories of emission, R&D investment and physical investment.
+
