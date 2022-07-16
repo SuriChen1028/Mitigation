@@ -32,11 +32,7 @@ $\psi_0$
 $\psi_0$
 and
 $\psi_1$
-. Under the same
-$\psi_0$
-_x.xxx
-$\psi_1$
-_x.xxx folder, results of some 
+. Under the same `psi_0_x.xxx_psi_1_x.xxx` folder, results of some 
 $\xi_a$
 and
 $\xi_g$
