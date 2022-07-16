@@ -32,6 +32,33 @@ $
 \psi_0
 $
 .
+- `res_data/6damage/` contains more recent solutions of HJBs under different values of 
+$
+\psi_0
+$
+and
+$
+\psi_1
+$
+. Under the same `
+$
+\psi_0
+$
+_x.xxx
+$
+\psi_1
+$
+_x.xxx
+`
+folder, results of some 
+$
+\xi_a
+$
+and
+$
+\xi_g
+$
+configurations are also available.
 - `Plots_compare_psi_1.ipynb` plots trajectories fixing value of 
 $
 \psi_0
@@ -52,3 +79,6 @@ $
 \gamma_3
 $
 .
+- `./Plota_xi_comparison.ipynb`: code for plots from April, 2022.
+- `model144.csv` contains the 144 climate sensitivity parameters values.
+- 
